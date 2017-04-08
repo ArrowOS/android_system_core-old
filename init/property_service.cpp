@@ -126,6 +126,8 @@ void StartSendingMessages() {
     accept_messages = true;
 }
 
+static bool weaken_prop_override_security = false;
+
 void StopSendingMessages() {
     auto lock = std::lock_guard{accept_messages_lock};
     accept_messages = false;
@@ -178,8 +180,8 @@ static uint32_t PropertySet(const std::string& name, const std::string& value, s
 
     prop_info* pi = (prop_info*) __system_property_find(name.c_str());
     if (pi != nullptr) {
-        // ro.* properties are actually "write-once".
-        if (StartsWith(name, "ro.")) {
+        // ro.* properties are actually "write-once", unless the system decides to
+        if (StartsWith(name, "ro.") && !weaken_prop_override_security) {
             *error = "Read-only property was already set";
             return PROP_ERROR_READ_ONLY_PROPERTY;
         }
@@ -913,13 +915,21 @@ void PropertyLoadBootDefaults() {
         }
     }
 
+    // Weaken property override security during execution of the vendor init extension
+    weaken_prop_override_security = true;
+
     // Update with vendor-specific property runtime overrides
     vendor_load_properties();
 
     property_initialize_ro_product_props();
+
     property_derive_build_fingerprint();
 
     update_sys_usb_config();
+
+    // Restore the normal property override security after init extension is executed
+    weaken_prop_override_security = false;
+
 }
 
 bool LoadPropertyInfoFromFile(const std::string& filename,
