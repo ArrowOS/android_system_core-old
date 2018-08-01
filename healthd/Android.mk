@@ -164,7 +164,11 @@ _img_modules += $$(LOCAL_MODULE)
 LOCAL_SRC_FILES := $1
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_CLASS := ETC
+ifeq ($(strip $(BOARD_CHARGER_LEGACY_MODULE_PATH)),true)
+LOCAL_MODULE_PATH := $$(TARGET_ROOT_OUT)/res/images
+else
 LOCAL_MODULE_PATH := $$(TARGET_ROOT_OUT)/res/images/charger
+endif
 include $$(BUILD_PREBUILT)
 endef
 
