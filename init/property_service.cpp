@@ -264,13 +264,13 @@ uint32_t InitPropertySet(const std::string& name, const std::string& value) {
     if (result != PROP_SUCCESS) {
         LOG(ERROR) << "Init cannot set '" << name << "' to '" << value << "': " << error;
     }
-
     return result;
 }
 
 class SocketConnection {
   public:
     SocketConnection(int socket, const ucred& cred) : socket_(socket), cred_(cred) {}
+
 
     ~SocketConnection() { close(socket_); }
 
@@ -419,7 +419,6 @@ bool CheckControlPropertyPerms(const std::string& name, const std::string& value
     const char* type_full = nullptr;
     property_info_area->GetPropertyInfo(control_string_full.c_str(), &target_context_full,
                                         &type_full);
-
     return CheckMacPerms(control_string_full, target_context_full, source_context.c_str(), cr);
 }
 

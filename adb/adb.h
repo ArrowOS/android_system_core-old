@@ -197,7 +197,6 @@ ConnectionState connection_state(atransport* t);
 #if !ADB_HOST
 extern int recovery_mode;
 #endif
-
 extern const char* adb_device_banner;
 
 #define CHUNK_SIZE (64 * 1024)

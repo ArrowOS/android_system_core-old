@@ -363,7 +363,6 @@ bool Subprocess::ForkAndExec(std::string* error) {
         }
 
         std::string sh_path = get_sh_path();
-
         if (command_.empty()) {
             execle(sh_path.c_str(), sh_path.c_str(), "-", nullptr, cenv.data());
         } else {
