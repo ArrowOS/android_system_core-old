@@ -215,6 +215,7 @@ void ColdBoot::Run() {
     LOG(INFO) << "Coldboot took " << cold_boot_timer.duration().count() / 1000.0f << " seconds";
 }
 
+
 int ueventd_main(int argc, char** argv) {
     /*
      * init sets the umask to 077 for forked processes. We need to
