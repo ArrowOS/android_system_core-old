@@ -26,6 +26,8 @@
 extern "C" {
 #endif
 
+#undef PROPERTY_VALUE_MAX
+
 /* System properties are *small* name value pairs managed by the
 ** property service.  If your data doesn't fit in the provided
 ** space it is not appropriate for a system property.
