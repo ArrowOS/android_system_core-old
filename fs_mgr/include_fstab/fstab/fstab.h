@@ -85,7 +85,11 @@ struct FstabEntry {
         bool slot_select_other : 1;
         bool fs_verity : 1;
         bool ext_meta_csum : 1;
+<<<<<<< HEAD   (f16fc5 init: don't skip starting a service with no domain if permis)
         bool fs_compress : 1;
+=======
+        bool wrapped_key : 1;
+>>>>>>> CHANGE (1f2ecb Add wrapped key support)
     } fs_mgr_flags = {};
 
     bool is_encryptable() const {

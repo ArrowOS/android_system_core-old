@@ -180,7 +180,11 @@ void ParseFsMgrFlags(const std::string& flags, FstabEntry* entry) {
         CheckFlag("slotselect_other", slot_select_other);
         CheckFlag("fsverity", fs_verity);
         CheckFlag("metadata_csum", ext_meta_csum);
+<<<<<<< HEAD   (f16fc5 init: don't skip starting a service with no domain if permis)
         CheckFlag("fscompress", fs_compress);
+=======
+        CheckFlag("wrappedkey", wrapped_key);
+>>>>>>> CHANGE (1f2ecb Add wrapped key support)
 
 #undef CheckFlag
 
