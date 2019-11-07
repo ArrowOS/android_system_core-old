@@ -83,6 +83,7 @@
 #include "service.h"
 #include "service_list.h"
 #include "subcontext.h"
+#include "vendor_init.h"
 #include "util.h"
 
 using namespace std::literals::string_literals;
@@ -1096,6 +1097,8 @@ static Result<void> do_loglevel(const BuiltinArguments& args) {
 }
 
 static Result<void> do_load_persist_props(const BuiltinArguments& args) {
+    vendor_load_persist_properties();
+
     SendLoadPersistentPropertiesMessage();
 
     start_waiting_for_property("ro.persistent_properties.ready", "true");
