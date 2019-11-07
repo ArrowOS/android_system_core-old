@@ -82,6 +82,7 @@
 #include "service.h"
 #include "service_list.h"
 #include "subcontext.h"
+#include "vendor_init.h"
 #include "util.h"
 
 using namespace std::literals::string_literals;
@@ -1125,6 +1126,8 @@ static Result<void> do_load_persist_props(const BuiltinArguments& args) {
         static size_t num_calls = 0;
         if (++num_calls == 1) return {};
     }
+
+    vendor_load_persist_properties();
 
     SendLoadPersistentPropertiesMessage();
 
