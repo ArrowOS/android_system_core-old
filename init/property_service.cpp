@@ -1267,10 +1267,13 @@ static void SetSafetyNetProps() {
         }
     });
 
+    std::string build_type = android::base::GetProperty("ro.build.type", "");
+
     // Bail out if this is recovery, fastbootd, or anything other than a normal boot.
     // fastbootd, in particular, needs the real values so it can allow flashing on
     // unlocked bootloaders.
-    if (!isNormalBoot || IsRecoveryMode()) {
+    // Exit if eng build.
+    if (!isNormalBoot || IsRecoveryMode() || build_type == "eng") {
         return;
     }
 
