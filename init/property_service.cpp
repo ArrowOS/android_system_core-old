@@ -1328,6 +1328,7 @@ void PropertyInit() {
     selinux_callback cb;
     cb.func_audit = PropertyAuditCallback;
     selinux_set_callback(SELINUX_CB_AUDIT, cb);
+    std::string build_type = android::base::GetProperty("ro.build.type", "");
 
     mkdir("/dev/__properties__", S_IRWXU | S_IXGRP | S_IXOTH);
     CreateSerializedPropertyInfo();
@@ -1339,7 +1340,7 @@ void PropertyInit() {
     }
 
     // Report valid verified boot chain to help pass Google SafetyNet integrity checks
-    if (!IsRecoveryMode()) {
+    if (build_type != "eng" || !IsRecoveryMode()) {
         SetSafetyNetProps();
     }
 
