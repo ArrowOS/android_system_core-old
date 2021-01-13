@@ -26,6 +26,7 @@ cc_defaults {
     shared_libs: [
         "libbase",
         "libprocessgroup",
+        "libpackagelistparser",
     ],
     static_libs: ["liblog"],
     logtags: ["event.logtags"],

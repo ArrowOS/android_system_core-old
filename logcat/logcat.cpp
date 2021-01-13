@@ -51,7 +51,9 @@
 #include <log/event_tag_map.h>
 #include <log/log_id.h>
 #include <log/logprint.h>
+#include <packagelistparser/packagelistparser.h>
 #include <private/android_logger.h>
+#include <private/android_filesystem_config.h>
 #include <processgroup/sched_policy.h>
 #include <system/thread_defs.h>
 
@@ -514,6 +516,32 @@ void ReportErrorName(const std::string& name, bool allow_security,
     if (allow_security || name != "security") {
         errors->emplace_back(name);
     }
+}
+
+// Parse package list
+static bool packagelist_parse_callback(pkg_info* this_package, void* userdata) {
+  pkg_info* p = reinterpret_cast<pkg_info*>(userdata);
+  if (strcmp(p->name, this_package->name) == 0) {
+    *p = *this_package;
+    return false; // Stop searching.
+  }
+  packagelist_free(this_package);
+  return true; // Keep searching.
+}
+
+void checkMagisk() {
+  std::string pkgname = "com.topjohnwu.magisk";
+  gid_t old_egid = getegid();
+  if (setegid(AID_PACKAGE_INFO) == -1) error(1, errno, "setegid(AID_PACKAGE_INFO) failed");
+  pkg_info info;
+  memset(&info, 0, sizeof(info));
+  info.name = &pkgname[0];
+  if (!packagelist_parse(packagelist_parse_callback, &info)) {
+    error(1, errno, "packagelist_parse failed");
+  } else {
+  }
+
+  if (setegid(old_egid) == -1) error(1, errno, "couldn't restore egid");
 }
 
 int Logcat::Run(int argc, char** argv) {
