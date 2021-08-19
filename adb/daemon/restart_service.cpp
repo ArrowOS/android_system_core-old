@@ -33,9 +33,12 @@ void restart_root_service(unique_fd fd) {
         WriteFdExactly(fd.get(), "adbd is already running as root\n");
         return;
     }
-    if (!__android_log_is_debuggable()) {
-        WriteFdExactly(fd.get(), "adbd cannot run as root in production builds\n");
-        return;
+
+    if ((android::base::GetProperty("ro.build.type", "") == "user")) {
+        if (!__android_log_is_debuggable()) {
+            WriteFdExactly(fd.get(), "adbd cannot run as root in production builds\n");
+            return;
+        }
     }
 
     LOG(INFO) << "adbd restarting as root";
