@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70a11725_31737986",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 71
+      },
+      "writtenOn": "2022-01-12T20:55:00Z",
+      "side": 1,
+      "message": "Duplicate: https://review.arrowos.net/c/ArrowOS/android_system_core/+/15030",
+      "revId": "8607900c9729bc5238cd7d5c220c55682a06ab29",
+      "serverId": "66da7299-18b4-411a-8fa2-12a880778196"
+    }
+  ]
+}
