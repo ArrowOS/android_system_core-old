@@ -73,49 +73,29 @@ void SetMountProperty(const MountHandlerEntry& entry, bool add) {
     std::string value;
     if (add) {
         value = entry.blk_device.substr(strlen(devblock));
-
+        if (android::base::StartsWith(value, "sd")) {
+            // All sd partitions inherit their queue characteristics
+            // from the whole device reference.  Strip partition number.
+            auto it = std::find_if(value.begin(), value.end(), [](char c) { return isdigit(c); });
+            if (it != value.end()) value.erase(it, value.end());
+        }
+        auto queue = "/sys/block/" + value + "/queue";
         struct stat sb;
+        if (stat(queue.c_str(), &sb) || !S_ISDIR(sb.st_mode)) value = "";
         if (stat(entry.mount_point.c_str(), &sb) || !S_ISDIR(sb.st_mode)) value = "";
         // Clear the noise associated with loopback and APEX.
         if (android::base::StartsWith(value, "loop")) value = "";
         if (android::base::StartsWith(entry.mount_point, "/apex/")) value = "";
-
-        if (!value.empty()) {
-            auto value_tmp = value;
-            std::string queue;
-            while (true) {
-                // Partitioned device don't have its own queue settings.
-                // Rewind each character until the main device appears.
-                queue = "/sys/block/" + value + "/queue";
-
-                if (!stat(queue.c_str(), &sb) && S_ISDIR(sb.st_mode)) {
-                    // Found device sysfs name
-                    break;
-                }
-
-                value.pop_back();
-                if (value.empty()) {
-                    LOG(ERROR) << "Failed to find block path for " << value_tmp;
-                    break;
-                }
-            }
-        }
     }
     auto mount_prop = entry.mount_point;
     if (mount_prop == "/") mount_prop = "/root";
     std::replace(mount_prop.begin(), mount_prop.end(), '/', '.');
-    auto blk_mount_prop = "dev.mnt.blk" + mount_prop;
-    auto dev_mount_prop = "dev.mnt.dev" + mount_prop;
+    mount_prop = "dev.mnt.blk" + mount_prop;
     // Set property even if its value does not change to trigger 'on property:'
     // handling, except for clearing non-existent or already clear property.
     // Goal is reduction of empty properties and associated triggers.
-    if (value.empty() && android::base::GetProperty(blk_mount_prop, "").empty()) return;
-    android::base::SetProperty(blk_mount_prop, value);
-    if (!value.empty()) {
-        android::base::SetProperty(dev_mount_prop, entry.blk_device.substr(strlen(devblock)));
-    } else {
-        android::base::SetProperty(dev_mount_prop, "");
-    }
+    if (value.empty() && android::base::GetProperty(mount_prop, "").empty()) return;
+    android::base::SetProperty(mount_prop, value);
 }
 
 }  // namespace
