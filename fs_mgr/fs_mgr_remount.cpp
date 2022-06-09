@@ -420,8 +420,7 @@ static int do_remount(int argc, char* argv[]) {
                 break;
             }
             // Find overlayfs mount point?
-            if ((mount_point == "/" && rentry.mount_point == "/system")  ||
-                (mount_point == "/system" && rentry.mount_point == "/")) {
+            if ((mount_point == "/") && (rentry.mount_point == "/system")) {
                 blk_device = rentry.blk_device;
                 mount_point = "/system";
                 found = true;
