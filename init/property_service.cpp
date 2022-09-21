@@ -1314,6 +1314,14 @@ static void SetSafetyNetProps() {
     InitPropertySet("ro.boot.verifiedbootstate", "green");
     InitPropertySet("ro.boot.veritymode", "enforcing");
     InitPropertySet("ro.boot.vbmeta.device_state", "locked");
+    InitPropertySet("ro.bootimage.build.type", "user");
+    InitPropertySet("ro.build.type", "user");
+    InitPropertySet("ro.product.build.type", "user");
+    InitPropertySet("ro.system.build.type", "user");
+    InitPropertySet("ro.system_ext.build.type", "user");
+    InitPropertySet("ro.vendor.build.type", "user");
+    InitPropertySet("ro.vendor_dlkm.build.type", "user");
+    InitPropertySet("ro.odm.build.type", "user");
 }
 
 void PropertyInit() {
